@@ -41,8 +41,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="62dp"
-
+                android:layout_marginTop="6dp"
                 android:layout_marginRight="62dp"
+
                 android:fontFamily="@font/cairo_semibold"
                 android:gravity="center"
                 android:textColor="@color/TextColorDarkGray"
@@ -70,25 +71,25 @@
             android:id="@+id/txtTemperature"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
-            android:fontFamily="@font/cantata_one"
+            android:layout_weight="4"
+            android:autoSizeMaxTextSize="160sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/cairo_semibold"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/TextColorDarkGray"
-            android:textSize="160sp"
-            android:typeface="serif"
             tools:text="64º" />
 
         <ImageView
             android:id="@+id/imgWeatherIcon"
             android:layout_width="150dp"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:layout_gravity="center"
-            android:src="@drawable/snowy"
             android:contentDescription="@string/icon" />
 
         <TextView
@@ -106,13 +107,14 @@
             tools:text="Few clouds" />
 
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/RecyclerForcast"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal">
+            android:layout_height="100dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal"
+            android:padding="6dp">
 
         </android.support.v7.widget.RecyclerView>
 

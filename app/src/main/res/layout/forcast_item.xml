@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
+    android:layout_width="80dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/customborder"
+    android:layout_marginLeft="6dp"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -11,13 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="6dp"
-
-        android:layout_marginRight="6dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
         android:textColor="@color/TextColorLightGray"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="SAT" />
 
     <ImageView
@@ -25,8 +24,8 @@
         android:layout_width="50dp"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:padding="2dp"
         android:layout_gravity="center"
-        android:src="@drawable/a04d"
         android:contentDescription="@string/icon" />
 
     <TextView
@@ -34,12 +33,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
         android:textColor="@color/TextColorLightGray"
-        android:textSize="18sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
         tools:text="72/64"
         />
 
