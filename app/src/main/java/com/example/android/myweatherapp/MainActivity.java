@@ -1,20 +1,18 @@
 package com.example.android.myweatherapp;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.format.DateFormat;
-import android.text.style.AlignmentSpan;
 import android.util.Log;
-import android.widget.Adapter;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.PriorityQueue;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -56,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
+
 
         txtLocation = findViewById(R.id.txtLocation);
         txtDay = findViewById(R.id.txtDay);
@@ -76,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         Search("Tehran,IR");
     }
+
 
 
     public void Search(String sSearch) {
@@ -114,6 +112,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.nav_selectcity:
+                Intent intent = new Intent (MainActivity.this, SetLocationActivity.class);
+                startActivityForResult(intent , 100);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void FillData(WeatherClass weatherClass) {
 
