@@ -23,11 +23,21 @@ public class SetLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_location);
 
+
+        Button btnDrawer = findViewById(R.id.btnBack);
+        btnDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED,returnIntent);
+                finish();
+            }
+        });
+
+
         Button btSearch = findViewById(R.id.btnSearch);
         final EditText edtSearchLocation = findViewById(R.id.edtSearchLocation) ;
         RecyclerView recyclerView = findViewById(R.id.recyclerLocations);
-
-
 
         final MySQLHelper mySQLHelper = new MySQLHelper(SetLocationActivity.this, "dbMovies", null, 1);
         List<String> lastLocations =  mySQLHelper.getLocations();
@@ -40,11 +50,8 @@ public class SetLocationActivity extends AppCompatActivity {
         });
 
 
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(SetLocationActivity.this, RecyclerView.VERTICAL, false));
-
-
 
 
         btSearch.setOnClickListener(new View.OnClickListener() {

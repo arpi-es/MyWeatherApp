@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +20,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,11 +62,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        Button btnDrawer = findViewById(R.id.btnDrawer);
+        btnDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDrawer();
+            }
+        });
+
+        fillDrawer();
 
 
         txtLocation = findViewById(R.id.txtLocation);
@@ -71,24 +85,49 @@ public class MainActivity extends AppCompatActivity {
         txtDescription = findViewById(R.id.txtDescription);
         imgIconWeather = findViewById(R.id.imgWeatherIcon);
 
-
         txtLocation.setText("Tehran, IR");
         txtDay.setText("Today");
         txtTemperature.setText("--");
 
-
         recyclerView = findViewById(R.id.RecyclerForcast);
-
 
         Search("Tehran,IR");
     }
 
-    public void OpenSetLocationActivity(MenuItem item) {
-        Intent intent = new Intent(MainActivity.this, SetLocationActivity.class);
-        startActivityForResult(intent, 100);
-        closeDrawer();
+
+    public void fillDrawer(){
+        TextView menu_SelectCity =  (TextView) findViewById(R.id.menu_SelectCity);
+        TextView menu_About = (TextView)  findViewById(R.id.menu_About);
 
 
+        menu_SelectCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SetLocationActivity.class);
+                startActivityForResult(intent, 100);
+                closeDrawer();
+            }
+        });
+
+
+
+        menu_About.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "App Design and Development by Arpi Es", Toast.LENGTH_LONG).show();
+
+            }
+
+        });
+
+
+
+    }
+
+
+    public void openDrawer() {
+        if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     public void closeDrawer() {
@@ -99,12 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void Search(String sSearch) {
 
-
         if (!isNetworkAvailable()) {
             Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
 
         } else {
-
 
             recyclerView.removeAllViews();
 
@@ -125,9 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             Gson gson = new Gson();
                             WeatherClass weatherClass = gson.fromJson(response.toString(), WeatherClass.class);
-
                             FillData(weatherClass);
-
 
                         } catch (Exception e) {
                             Log.e("MYTAG", e.getMessage());
@@ -168,14 +203,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) {
                 String result = data.getStringExtra("result");
-
                 Search(result);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
+
             }
         }
-    }//onActivityResult
+    }
 
     private void FillData(WeatherClass weatherClass) {
 
@@ -212,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
             String monthString = (String) DateFormat.format("MMM", date); // Jun
 
             txtDay.setText(dayOfTheWeek + ", " + monthString + " " + day);
-
 
             String uri = "@drawable/" + TodayData.getWeather().getIcon();
             int imageResource = getResources().getIdentifier(uri, null, getPackageName());
