@@ -1,10 +1,17 @@
 package com.example.android.myweatherapp;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgIconWeather;
     private RecyclerView recyclerView;
 
+    private ProgressDialog dialog;
 
     private String BaseURL = "https://api.weatherbit.io/v2.0/forecast/daily?days=6&key=d38c0bd9cf044b6f9b884d50869073db";
 
@@ -52,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -74,64 +83,99 @@ public class MainActivity extends AppCompatActivity {
         Search("Tehran,IR");
     }
 
-
-
-    public void Search(String sSearch) {
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        String finalURL = BaseURL + "&city=" + sSearch;
-        client.get(finalURL, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                if (statusCode == 200) {
-
-                    try {
-                        Gson gson = new Gson();
-                        WeatherClass weatherClass = gson.fromJson(response.toString(), WeatherClass.class);
-
-                        FillData(weatherClass);
-
-
-                    } catch (Exception e) {
-                        Log.e("MYTAG", e.getMessage());
-                    }
-                }
-            }
-
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Toast.makeText(MainActivity.this, "Error Loading data." + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-        });
+    public void OpenSetLocationActivity(MenuItem item) {
+        Intent intent = new Intent(MainActivity.this, SetLocationActivity.class);
+        startActivityForResult(intent, 100);
+        closeDrawer();
 
 
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.nav_selectcity:
-                Intent intent = new Intent (MainActivity.this, SetLocationActivity.class);
-                startActivityForResult(intent , 100);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
+    public void closeDrawer() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 
+    public void Search(String sSearch) {
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (!isNetworkAvailable()) {
+            Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+
+        } else {
+
+
+            recyclerView.removeAllViews();
+
+            dialog = new ProgressDialog(MainActivity.this);
+            dialog.setMessage("Loading Data, please wait...");
+            dialog.show();
+
+            AsyncHttpClient client = new AsyncHttpClient();
+
+            String finalURL = BaseURL + "&city=" + sSearch;
+            client.get(finalURL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (statusCode == 200) {
+
+                        try {
+                            Gson gson = new Gson();
+                            WeatherClass weatherClass = gson.fromJson(response.toString(), WeatherClass.class);
+
+                            FillData(weatherClass);
+
+
+                        } catch (Exception e) {
+                            Log.e("MYTAG", e.getMessage());
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "No Result Found", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                    Toast.makeText(MainActivity.this, "Error Loading data." + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            });
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+
+
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getStringExtra("result");
+
+                Search(result);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
 
     private void FillData(WeatherClass weatherClass) {
 
@@ -156,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             String sTemperature = " " + TodayData.getTemp().intValue() + "º";
-            txtTemperature.setText( sTemperature  );
+            txtTemperature.setText(sTemperature);
             txtDescription.setText(TodayData.getWeather().getDescription());
 
 
@@ -164,17 +208,16 @@ public class MainActivity extends AppCompatActivity {
             Date date = inFormat.parse(TodayData.getDatetime());
 
             String dayOfTheWeek = (String) DateFormat.format("EEEE", date); // Thursday
-            String day          = (String) DateFormat.format("dd",   date); // 20
-            String monthString  = (String) DateFormat.format("MMM",  date); // Jun
+            String day = (String) DateFormat.format("dd", date); // 20
+            String monthString = (String) DateFormat.format("MMM", date); // Jun
 
-            txtDay.setText(dayOfTheWeek + ", " + monthString + " " + day );
+            txtDay.setText(dayOfTheWeek + ", " + monthString + " " + day);
 
 
             String uri = "@drawable/" + TodayData.getWeather().getIcon();
             int imageResource = getResources().getIdentifier(uri, null, getPackageName());
             Drawable res = getResources().getDrawable(imageResource);
             imgIconWeather.setImageDrawable(res);
-
 
 
         } catch (Exception e) {

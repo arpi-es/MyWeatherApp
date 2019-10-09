@@ -38,23 +38,64 @@
             android:layout_marginLeft="62dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="62dp"
-
             android:fontFamily="@font/cairo_semibold"
             android:gravity="center"
             android:textColor="@color/TextColorDarkGray"
             android:textSize="22sp"
             android:typeface="normal"
             android:text="Select City" />
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        >
 
+    <EditText
+        android:id="@+id/edtSearchLocation"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:padding="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="16sp"
+        android:textColor="@color/TextColorLightGray"
+        android:fontFamily="@font/cairo_semibold"
+        android:background="@drawable/customborder"
+        android:layout_toLeftOf="@id/btnSearch"/>
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/fontawesome_webfont"
+            android:text="@string/fa_search"
+            android:textColor="@color/TextColorDarkGray"
+            android:textSize="20sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            />
 
     </RelativeLayout>
 
-    <EditText
-        android:layout_margin="16dp"
-        android:padding="6dp"
+    <View
+        android:layout_marginTop="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#FFFFFF" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerLocations"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/customborder"/>
+        android:layout_height="match_parent"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
 
 </LinearLayout>

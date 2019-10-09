@@ -14,7 +14,7 @@ public class Datum {
     private String windCdir;
     @SerializedName("rh")
     @Expose
-    private Integer rh;
+    private Double rh;
     @SerializedName("pres")
     @Expose
     private Double pres;
@@ -44,7 +44,7 @@ public class Datum {
     private Integer ts;
     @SerializedName("sunrise_ts")
     @Expose
-    private Integer sunriseTs;
+    private Double sunriseTs;
     @SerializedName("app_min_temp")
     @Expose
     private Double appMinTemp;
@@ -92,7 +92,7 @@ public class Datum {
     private Integer cloudsHi;
     @SerializedName("precip")
     @Expose
-    private Integer precip;
+    private Double precip;
     @SerializedName("low_temp")
     @Expose
     private Double lowTemp;
@@ -134,11 +134,11 @@ public class Datum {
         this.windCdir = windCdir;
     }
 
-    public Integer getRh() {
+    public Double getRh() {
         return rh;
     }
 
-    public void setRh(Integer rh) {
+    public void setRh(Double rh) {
         this.rh = rh;
     }
 
@@ -214,11 +214,11 @@ public class Datum {
         this.ts = ts;
     }
 
-    public Integer getSunriseTs() {
+    public Double getSunriseTs() {
         return sunriseTs;
     }
 
-    public void setSunriseTs(Integer sunriseTs) {
+    public void setSunriseTs(Double sunriseTs) {
         this.sunriseTs = sunriseTs;
     }
 
@@ -342,11 +342,11 @@ public class Datum {
         this.cloudsHi = cloudsHi;
     }
 
-    public Integer getPrecip() {
+    public Double getPrecip() {
         return precip;
     }
 
-    public void setPrecip(Integer precip) {
+    public void setPrecip(Double precip) {
         this.precip = precip;
     }
 
